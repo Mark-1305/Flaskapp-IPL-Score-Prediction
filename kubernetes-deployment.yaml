@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: deployment-service
+spec:
+  selector:
+    app: webapp
+  ports:
+    - protocol: "TCP"
+      port: 6000
+      targetPort: 8080
+  type: NodePort
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ipl-score-prediction-deployment
+spec:
+  selector:
+    matchLabels:
+      app: webapp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webapp
+    spec:
+      containers:
+        - name: predictioncontainer
+          image: manoharshetty507/ml-flask-web-app:v1
+          ports:
+            - containerPort: 8080
